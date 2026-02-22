@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>English Robot • Chatbot que acelera seu inglês</title>
+  <meta name="description" content="Robô chatbot para alavancar o inglês do A2 ao C1 com prática guiada, correção e conversação em poucos meses." />
+
+  <style>
+    :root{
+      --bg:#070A1A;
+      --panel:#0E1333;
+      --panel2:#0B102B;
+      --text:#F5F7FF;
+      --muted:rgba(245,247,255,.78);
+      --border:rgba(255,255,255,.12);
+
+      --c1:#7C3AED;   /* roxo vivo */
+      --c2:#06B6D4;   /* ciano */
+      --c3:#22C55E;   /* verde */
+      --c4:#F97316;   /* laranja */
+      --c5:#E11D48;   /* rosa */
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 10% 10%, rgba(124,58,237,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(6,182,212,.28), transparent 60%),
+        radial-gradient(900px 500px at 70% 90%, rgba(34,197,94,.22), transparent 60%),
+        linear-gradient(180deg, #070A1A 0%, #050617 100%);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 56px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding: 10px 0 18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+    }
+
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      background:
+        conic-gradient(from 180deg, var(--c2), var(--c1), var(--c5), var(--c4), var(--c3), var(--c2));
+      box-shadow: 0 10px 30px rgba(124,58,237,.25);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-25%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 55%);
+      transform: rotate(18deg);
+    }
+
+    .brand h1{ font-size: 16px; margin:0; line-height:1.1; letter-spacing:.2px; }
+    .brand p{ margin:0; font-size: 12px; color:var(--muted); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 10px 12px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(14,19,51,.55);
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow);
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--c3);
+      box-shadow: 0 0 0 4px rgba(34,197,94,.15);
+    }
+
+    .hero{
+      margin-top: 8px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(14,19,51,.78), rgba(11,16,43,.65));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(600px 180px at 20% 10%, rgba(6,182,212,.18), transparent 55%),
+        radial-gradient(500px 180px at 80% 0%, rgba(124,58,237,.22), transparent 55%),
+        radial-gradient(500px 220px at 70% 120%, rgba(249,115,22,.14), transparent 60%);
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
+
+    .heroLeft{ padding: 22px 22px 18px; }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .spark{
+      width:16px;height:16px;border-radius:6px;
+      background: linear-gradient(135deg, var(--c5), var(--c1), var(--c2));
+      box-shadow: 0 10px 30px rgba(225,29,72,.18);
+    }
+
+    .heroLeft h2{
+      margin: 14px 0 10px;
+      font-size: clamp(28px, 4.5vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.4px;
+    }
+    .grad{
+      background: linear-gradient(90deg, var(--c2), var(--c1), var(--c5));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .heroLeft p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      max-width: 62ch;
+    }
+
+    .ctaRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+      margin-top: 12px;
+    }
+
+    .btn{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      font-weight: 800;
+      letter-spacing:.2px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      box-shadow: 0 16px 40px rgba(124,58,237,.25);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+
+    .btnPrimary{
+      background: linear-gradient(90deg, var(--c2), var(--c1), var(--c5));
+      color: #050617;
+    }
+    .btnGhost{
+      background: rgba(255,255,255,.04);
+      border:1px solid var(--border);
+      color: var(--text);
+      box-shadow: none;
+    }
+    .btnGreen{
+      background: linear-gradient(90deg, var(--c3), var(--c2));
+      color: #050617;
+      box-shadow: 0 16px 40px rgba(34,197,94,.15);
+    }
+
+    .note{
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      max-width: 80ch;
+      margin-top: 10px;
+    }
+
+    .heroRight{
+      padding: 18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .miniTitle{
+      margin: 4px 0 2px;
+      font-size: 14px;
+      letter-spacing:.2px;
+      color: rgba(245,247,255,.92);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .feat{
+      border:1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      padding: 12px;
+      min-height: 92px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .ico{
+      width:10px;height:10px;border-radius:999px;
+      background: var(--c2);
+      box-shadow: 0 0 0 4px rgba(6,182,212,.14);
+    }
+    .feat strong{ display:block; font-size: 13px; margin-bottom: 4px; }
+    .feat span{ font-size: 12px; color: var(--muted); line-height: 1.45; display:block; }
+
+    .section{ margin-top: 18px; padding: 22px; }
+    .section h3{ margin: 0 0 8px; font-size: 18px; letter-spacing: .2px; }
+    .section p{ margin: 0 0 12px; color: var(--muted); line-height: 1.6; font-size: 14px; }
+
+    .how{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 900px){
+      .how{ grid-template-columns: 1fr; }
+    }
+    .step{
+      border:1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      padding: 14px;
+    }
+    .num{
+      width:34px;height:34px;border-radius: 12px;
+      display:grid; place-items:center;
+      font-weight:900;
+      color:#050617;
+      background: linear-gradient(135deg, var(--c3), var(--c2));
+      margin-bottom: 10px;
+    }
+    .step strong{ display:block; margin-bottom:6px; }
+    .step span{ color:var(--muted); font-size: 13px; line-height:1.5; }
+
+    .anchor{
+      scroll-margin-top: 18px;
+      border:1px dashed rgba(255,255,255,.22);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,.03);
+      margin-top: 18px;
+    }
+    .anchorTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 8px;
+      flex-wrap:wrap;
+    }
+    .anchorTitle strong{ font-size: 14px; }
+    .badge{
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(6,182,212,.12);
+      border: 1px solid rgba(6,182,212,.35);
+      color: rgba(245,247,255,.92);
+      white-space:nowrap;
+    }
+
+    .audioBox{
+      margin-top: 12px;
+      border:1px solid rgba(34,197,94,.35);
+      background: rgba(34,197,94,.06);
+      border-radius: 16px;
+      padding: 12px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .audioBox p{
+      margin:0;
+      color: rgba(245,247,255,.86);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 80ch;
+    }
+    .status{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .sep{ height:1px; background: rgba(255,255,255,.10); margin: 14px 0; }
+
+    footer{
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+      padding: 16px 6px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>English Robot</h1>
+          <p>Chatbot inteligente criado por engenheiros de software</p>
+        </div>
+      </div>
+
+      <div class="pill" title="Disponível 24/7">
+        <span class="dot" aria-hidden="true"></span>
+        Online • Treino diário
+      </div>
+    </div>
+
+    <div class="hero">
+      <section class="card heroLeft">
+        <div class="kicker">
+          <span class="spark" aria-hidden="true"></span>
+          Robô chatbot para acelerar fluência e confiança
+        </div>
+
+        <h2>
+          Alavanque seu inglês do <span class="grad">A2 ao C1</span>
+          com prática guiada em poucos meses
+        </h2>
+
+        <p>
+          Este é um chatbot inteligente criado em <strong>Sydney Australia</strong> — uma plataforma profissional para construir robôs conversacionais.
+          Aqui, você treina inglês com correções, explicações claras e prática de conversação, todos os dias.
+            <strong>escreva no chat qual a sua lingua nativa</strong> 
+        </p>
+
+        <div class="ctaRow">
+          <button class="btn btnPrimary" id="btnOpenChat" type="button">
+            🚀 Abrir o Chat Agora
+          </button>
+
+          <button class="btn btnGreen" id="btnEnableAudio" type="button">
+            🔊 Ativar Áudio
+          </button>
+
+          <a class="btn btnGhost" href="#como-funciona" style="text-decoration:none;">
+            📘 Como funciona
+          </a>
+        </div>
+
+        <p class="note">
+          <strong>Importante sobre o som:</strong> navegadores (Chrome/Safari/Edge) bloqueiam áudio automático.
+          Por isso existe o botão <strong>“Ativar Áudio”</strong> — clique nele uma vez para liberar o som, depois use o chatbot normalmente.
+        </p>
+      </section>
+
+      <aside class="card heroRight">
+        <h3 class="miniTitle">O que você treina aqui</h3>
+
+        <div class="grid">
+          <div class="feat">
+            <div class="tag"><span class="ico" style="background:var(--c2)"></span> Speaking</div>
+            <strong>Conversação guiada</strong>
+            <span>Respostas práticas, perguntas inteligentes e treino diário para fluência.</span>
+          </div>
+
+          <div class="feat">
+            <div class="tag"><span class="ico" style="background:var(--c1)"></span> Grammar</div>
+            <strong>Gramática clara</strong>
+            <span>Explicações simples do básico ao avançado, com exemplos do seu dia a dia.</span>
+          </div>
+
+          <div class="feat">
+            <div class="tag"><span class="ico" style="background:var(--c3)"></span> Writing</div>
+            <strong>Correção detalhada</strong>
+            <span>Você escreve e o robô corrige erros, melhora frase e dá versão “C1 style”.</span>
+          </div>
+
+          <div class="feat">
+            <div class="tag"><span class="ico" style="background:var(--c4)"></span> Job English</div>
+            <strong>Entrevista e trabalho</strong>
+            <span>Simulações reais de entrevista e vocabulário para emprego e rotina.</span>
+          </div>
+        </div>
+
+        <div class="feat">
+          <div class="tag"><span class="ico" style="background:var(--c5)"></span> Plano rápido</div>
+          <strong>Rotina sugerida (10–20 min/dia)</strong>
+          <span>1) 5 min vocabulário • 2) 10 min conversa • 3) 5 min correção/gramática. Consistência = resultado.</span>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card section" id="como-funciona">
+      <h3>Como o English Robot funciona</h3>
+      <p>
+        Você conversa com o robô como se fosse um professor particular.
+        Ele adapta o nível, corrige erros, cria exercícios e te empurra para o próximo passo.
+      </p>
+
+      <div class="how">
+        <div class="step">
+          <div class="num">1</div>
+          <strong>Você fala / escreve</strong>
+          <span>Envie textos, peça exercícios e treine conversação com temas reais do seu dia a dia.</span>
+        </div>
+
+        <div class="step">
+          <div class="num">2</div>
+          <strong>O robô corrige e explica</strong>
+          <span>Ele mostra seus erros, sugere frases melhores e explica gramática com exemplos.</span>
+        </div>
+
+        <div class="step">
+          <div class="num">3</div>
+          <strong>Você repete com melhoria</strong>
+          <span>Refaça com a versão melhorada. Prática + correção + repetição = evolução rápida.</span>
+        </div>
+      </div>
+
+      <div class="anchor" id="chat-anchor">
+        <div class="anchorTitle">
+          <strong>Área do Chat (Widget do Voiceflow)</strong>
+          <span class="badge">Produção • Project ID: 699983648e887471c80e599f</span>
+        </div>
+
+        <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.55;">
+          Abaixo está o código do Voiceflow que carrega o chatbot. Assim que a página carregar,
+          o ícone do chat deve aparecer (normalmente no canto da tela).
+        </p>
+
+        <!-- ✅ BOX PARA ATIVAR ÁUDIO (interação do usuário) -->
+        <div class="audioBox">
+          <div>
+            <p>
+              <strong>Sem som?</strong> Clique em <strong>“Ativar Áudio”</strong> (ou no botão no topo). Isso “desbloqueia” o áudio do navegador.
+              Depois, abra o chat e use normalmente.
+            </p>
+            <div class="status" id="audioStatus">Status do áudio: não ativado</div>
+          </div>
+          <button class="btn btnGreen" id="btnEnableAudio2" type="button">🔊 Ativar Áudio</button>
+        </div>
+
+        <!-- ✅ CÓDIGO DO VOICEFLOW (COMO VOCÊ PEDIU) -->
+        <script type="text/javascript">
+          (function(d, t) {
+              var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+              v.onload = function() {
+                window.voiceflow.chat.load({
+                  verify: { projectID: '699983648e887471c80e599f' },
+                  url: 'https://general-runtime.voiceflow.com',
+                  versionID: 'production',
+                  voice: {
+                    url: "https://runtime-api.voiceflow.com"
+                  }
+                });
+              }
+              v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+          })(document, 'script');
+        </script>
+        <!-- ✅ FIM DO CÓDIGO DO VOICEFLOW -->
+
+      </div>
+
+      <div class="sep"></div>
+
+      <h3>O que pedir para o robô (copie e cole)</h3>
+      <p style="margin-bottom:10px;">
+        Use estas mensagens para começar rápido:
+      </p>
+      <div class="how">
+        <div class="step">
+          <div class="num" style="background:linear-gradient(135deg,var(--c2),var(--c1))">A</div>
+          <strong>Correção de texto</strong>
+          <span>“Correct my text and rewrite it in C1 level. Explain my mistakes.”</span>
+        </div>
+        <div class="step">
+          <div class="num" style="background:linear-gradient(135deg,var(--c3),var(--c2))">B</div>
+          <strong>Entrevista de emprego</strong>
+          <span>“Do a job interview simulation for a construction worker in Australia.”</span>
+        </div>
+        <div class="step">
+          <div class="num" style="background:linear-gradient(135deg,var(--c4),var(--c5))">C</div>
+          <strong>Gramática prática</strong>
+          <span>“Teach me relative clauses with examples and a short quiz.”</span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      © <span id="year"></span> English Robot • Construído por Nathan Galgaro • Treino diário = evolução rápida
+    </footer>
+  </div>
+
+  <script>
+    // Ano automático
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const audioStatus = document.getElementById("audioStatus");
+
+    // ✅ Função que "desbloqueia" áudio no navegador após clique do usuário
+    async function unlockAudio() {
+      try {
+        // 1) WebAudio (mais confiável para desbloquear autoplay)
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) {
+          const ctx = new AudioCtx();
+          // cria um beep "mudo" (gain=0) só para liberar a permissão
+          const oscillator = ctx.createOscillator();
+          const gain = ctx.createGain();
+          gain.gain.value = 0.00001; // quase mudo (não zero para alguns browsers)
+          oscillator.connect(gain);
+          gain.connect(ctx.destination);
+
+          oscillator.start();
+          oscillator.stop(ctx.currentTime + 0.05);
+
+          if (ctx.state === "suspended") await ctx.resume();
+        }
+
+        // 2) Fallback simples (alguns browsers aceitam)
+        const a = new Audio();
+        a.muted = true;
+        const playPromise = a.play();
+        if (playPromise && typeof playPromise.then === "function") {
+          await playPromise;
+        }
+
+        audioStatus.textContent = "Status do áudio: ATIVADO ✅ (agora o navegador permite som)";
+      } catch (e) {
+        audioStatus.textContent =
+          "Status do áudio: não foi possível ativar automaticamente. " +
+          "Tente clicar no chat e permitir som no navegador.";
+      }
+    }
+
+    // Botões de áudio
+    document.getElementById("btnEnableAudio").addEventListener("click", unlockAudio);
+    document.getElementById("btnEnableAudio2").addEventListener("click", unlockAudio);
+
+    // Botão "Abrir o Chat" -> rola até a área do widget e dá dica
+    document.getElementById("btnOpenChat").addEventListener("click", async () => {
+      // desbloqueia áudio junto (melhor experiência)
+      await unlockAudio();
+
+      document.getElementById("chat-anchor").scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        alert("Pronto! Procure o ícone do chat no canto da tela e comece a conversar 🙂");
+      }, 450);
+    });
+  </script>
+</body>
+</html>
